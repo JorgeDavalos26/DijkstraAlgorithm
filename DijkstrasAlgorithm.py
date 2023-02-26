@@ -10,29 +10,29 @@ class DijkstrasAlgorithm:
         self.destination = graph["destination"]
     
     def dijkstra(self, origin, destination, weightAccum = 0):
-        # parametro de salida de la recursividad
+        # to exit recursivity
         if destination == origin:
             return
 
         edgesList = []
 
-        # recolectar las conexiones - peso del nodo visitado
+        # recolect the next candidate nodes to visit
         for row in self.tableEdges:
             if row[0] == origin:
                 edgesList.append(row)
         
-        # actualizar la tabla
+        # update the nodes from the table that we'll probably visit
         for rowEdgesList in edgesList:
             for rowNodes in self.tableNodes:
                 if rowEdgesList[1] == rowNodes[0]:
                     if (weightAccum + rowEdgesList[2]) < rowNodes[1]:
                         rowNodes[1] = rowEdgesList[2] + weightAccum
                         rowNodes[2] = rowEdgesList[0]
-                        print(self.tableNodes)
-                        print("----------------------------------")
+                        """ print(self.tableNodes)
+                        print("----------------") """
                     break
 
-        # escoger el minimo camino
+        # choose the nearest node
         minimumNode = ["", sys.maxsize, ""] # empezammos con infinito como minimo
         for rowEdgesList in edgesList:
             for rowNodes in self.tableNodes:
@@ -40,21 +40,19 @@ class DijkstrasAlgorithm:
                     if rowNodes[1] < minimumNode[1]:
                         minimumNode = rowNodes
                     break
-        # minimumPath termina teniendo la lista que tiene menos peso
+        # minimumNode is the nearest node
 
-        print(minimumNode)
-
-        # acumular
+        # lets update the accumulator
         weightAccum = minimumNode[1]
 
         # dijkstra (recursivity)
         self.dijkstra(minimumNode[0], destination, weightAccum)
 
     def run(self):
-        # llamar el algoritmo de Dijkstra (con A como origen, con C como destino, 0 como acumulador inicial)
+        # call Dijkstra Algorithm
         self.dijkstra(self.origin, self.destination)
 
-        # obtener una lista que nos definira el camino final mas optimo
+        # obtain as a list the final path (the sortest path found)
         finalPath = []
         toFind = self.destination
         while toFind != self.origin:

@@ -5,8 +5,10 @@ import networkx as nx
 from DijkstrasAlgorithm import *
 from DataSource import *
 
+selectedGraph = graph1
+
 # Execute Dijkstra Algorithm 
-tableNodes, finalPath = DijkstrasAlgorithm(graph1).run().values()
+tableNodes, finalPath = DijkstrasAlgorithm(selectedGraph).run().values()
 
 print("============== The Shortest Path discovered ===================")
 print(finalPath)
@@ -22,11 +24,11 @@ for k, nodo in enumerate(finalPath):
 G = nx.Graph()
 
 # Add Nodes to the Visual Graph
-add_nodes_from = [(node[0], {"label":node[0]}) for node in graph1["tableNodes"]]
+add_nodes_from = [(node[0], {"label":node[0]}) for node in selectedGraph["tableNodes"]]
 G.add_nodes_from(add_nodes_from)
 
 # Add Edges to the Visual Graph
-add_edges_from = [(edge[0], edge[1], {"weight": edge[2]}) for edge in graph1["tableEdges"]]
+add_edges_from = [(edge[0], edge[1], {"weight": edge[2]}) for edge in selectedGraph["tableEdges"]]
 G.add_edges_from(add_edges_from)
 
 # Make Node Labels
@@ -34,7 +36,7 @@ node_labels = {n: (d["label"]) for n,d in G.nodes(data=True)}
 
 # Set position of Node Labels
 pos_node_labels = {}
-for node,(x,y) in graph1["posNodes"].items():
+for node,(x,y) in selectedGraph["posNodes"].items():
     pos_node_labels[node] = (x+0.5, y-1.5)
 
 # Make Edge Labels
@@ -46,7 +48,7 @@ node_colors = ["green" if n in finalPath else "lightgray" for n in G.nodes()]
 # make good order of edges !!THIS IS UNIQUE BECAUSE OF THE LIBRARY Networkx!!
 good_ordered_edges_for_graph = []
 for (a,b) in G.edges():
-    for (x,y,z) in graph1["tableEdges"]:
+    for (x,y,z) in selectedGraph["tableEdges"]:
         if (a == x and b == y) or (b == x and a == y):
             good_ordered_edges_for_graph.append((x,y))
             break
@@ -54,8 +56,11 @@ for (a,b) in G.edges():
 # Customize color of Edges included within the Final Shortest Path
 edge_colors = ["green" if n in finalPathEdges else "lightgray" for n in good_ordered_edges_for_graph]
 
+# Make window bigger
+plt.rcParams["figure.figsize"] = (12, 5)
+
 # Draw all Nodes and its customized colors
-nx.draw(G, pos=graph1["posNodes"], with_labels=True, 
+nx.draw(G, pos=selectedGraph["posNodes"], with_labels=True, 
     node_color=node_colors, node_size=3000, 
     font_color="white", font_size=20, 
     font_family="Times New Roman", edge_color=edge_colors,
@@ -67,7 +72,7 @@ nx.draw_networkx_labels(G, pos=pos_node_labels, labels=node_labels,
     font_family="Times New Roman")
 
 # Draw all Edge Labels
-nx.draw_networkx_edge_labels(G, pos=graph1["posNodes"], edge_labels=edge_labels, 
+nx.draw_networkx_edge_labels(G, pos=selectedGraph["posNodes"], edge_labels=edge_labels, 
     label_pos=0.5)
 
 plt.margins(0.2)
